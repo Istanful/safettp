@@ -1,34 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe Safettp::Request do
-  describe '.http_request_for' do
-    it 'returns the appropriate net http instance' do
-      uri = URI('http://example.com')
-
-      expect(request_for(:get, uri)).to be_an_instance_of(Net::HTTP::Get)
-      expect(request_for(:post, uri)).to be_an_instance_of(Net::HTTP::Post)
-      expect(request_for(:put, uri)).to be_an_instance_of(Net::HTTP::Put)
-      expect(request_for(:patch, uri)).to be_an_instance_of(Net::HTTP::Patch)
-      expect(request_for(:delete, uri)).to be_an_instance_of(Net::HTTP::Delete)
-    end
-
-    def request_for(verb, uri)
-      Safettp::Request.request_for(verb, uri)
-    end
-  end
-
   describe '#perform' do
-    it 'sets up a net http request object with the given url' do
-      stub_http
+    it 'sets up a net http request object with the given options' do
       uri = URI('https://example.com')
+      options = double(Safettp::HTTPOptions).as_null_object
+      allow(Safettp::HTTPOptions).to receive(:new).and_return(options)
+      stubbed_req = double(Safettp::Request::Net, perform: nil)
+      allow(Safettp::Request::Net).to receive(:new).and_return(stubbed_req)
       request = described_class.new(uri)
-      net_req = double(Net::HTTP::Get).as_null_object
-      allow(net_req).to receive(:new).with(uri)
-      allow(Safettp::Request).to receive(:request_for).and_return(net_req)
 
       request.perform(:get)
 
-      expect(Safettp::Request).to have_received(:request_for).with(:get, uri)
+      expect(Safettp::Request::Net).to have_received(:new)
+        .with(:get, uri, options)
     end
 
     it 'performs an http request' do
@@ -52,7 +37,8 @@ RSpec.describe Safettp::Request do
 
       request.perform(:get)
 
-      expect(Safettp::Response).to have_received(:new).with(stubbed_response)
+      expect(Safettp::Response).to have_received(:new)
+        .with(stubbed_response, any_args)
     end
 
     def stub_http(stubbed_methods = {})
