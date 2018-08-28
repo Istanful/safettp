@@ -13,7 +13,7 @@ class Safettp::Request::Net
 
   def http
     ::Net::HTTP.new(uri.host, uri.port).tap do |obj|
-      obj.use_ssl = true
+      obj.use_ssl = uri.scheme == 'https'
       obj.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
   end
