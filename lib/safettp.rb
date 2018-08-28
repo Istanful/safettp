@@ -1,5 +1,6 @@
-require "safettp/version"
+require 'safettp/version'
+require 'safettp/request'
+require 'safettp/response'
 
 module Safettp
-  # Your code goes here...
 end
