@@ -4,6 +4,7 @@ class Safettp::Request
   def initialize(uri, options = {})
     @uri = URI(uri)
     @options = Safettp::HTTPOptions.new(options)
+    @uri.query = @options.query
   end
 
   def perform(method)

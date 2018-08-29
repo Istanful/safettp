@@ -18,6 +18,10 @@ class Safettp::HTTPOptions
     options_hash.fetch(:parser, Safettp::Parsers::JSON)
   end
 
+  def query
+    URI.encode_www_form(options_hash.fetch(:query, {}))
+  end
+
   def body
     options_hash.fetch(:body, "")
   end
