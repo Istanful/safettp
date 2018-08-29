@@ -6,8 +6,15 @@ class Safettp::Response
     @parser = parser
   end
 
+  def success?
+    @http_response.kind_of? Net::HTTPSuccess
+  end
+
+  def failure?
+    !success?
+  end
+
   def parsed_body
-    puts http_response.body
     parser.decode(http_response.body)
   end
 end

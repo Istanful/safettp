@@ -1,6 +1,20 @@
 require 'spec_helper'
 
 RSpec.describe Safettp::Client do
+  describe '#perform' do
+    it 'wraps the response in a guard' do
+      client = described_class.new('https://example.com')
+      response = double(Safettp::Response)
+      stubbed_request = stub_safettp_request(response)
+      guard = double(Safettp::Guard)
+      allow(guard).to receive(:evaluate!).and_return(response)
+      allow(Safettp::Guard).to receive(:new).and_return(guard)
+
+      expect { |b| client.perform(:post, 'post', &b) }.to yield_with_args(guard)
+      expect(guard).to have_received(:evaluate!)
+    end
+  end
+
   describe '#perform_without_guard' do
     it 'performs an http request with the appropriate method' do
       client = described_class.new('https://example.com')
@@ -25,9 +39,9 @@ RSpec.describe Safettp::Client do
     end
   end
 
-  def stub_safettp_request
+  def stub_safettp_request(response = double(Safettp::Response))
     double(Safettp::Request).tap do |req|
-      allow(req).to receive(:perform)
+      allow(req).to receive(:perform).and_return(response)
       allow(Safettp::Request).to receive(:new).and_return(req)
     end
   end

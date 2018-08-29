@@ -6,6 +6,13 @@ class Safettp::Client
     @options_hash = options_hash
   end
 
+  def perform(*args, &block)
+    response = perform_without_guard(*args)
+    guard = Safettp::Guard.new(response)
+    yield(guard)
+    guard.evaluate!
+  end
+
   def perform_without_guard(method, uri_suffix = '/')
     url = "#{base_url}#{uri_suffix}"
     Safettp::Request.new(url, options_hash)
