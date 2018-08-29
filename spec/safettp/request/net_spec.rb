@@ -1,15 +1,44 @@
 require 'spec_helper'
 
+class Safettp::BasicAuthenticator
+  attr_reader :options
+
+  def initialize(options)
+    @options = options
+  end
+
+  def set(request)
+    request.basic_auth(options[:username], options[:password])
+  end
+end
+
+class Safettp::NoneAuthenticator
+  attr_reader :options
+
+  def initialize(options)
+    @options = options
+  end
+
+  def set(request)
+    request
+  end
+end
+
 RSpec.describe Safettp::Request::Net do
-  describe '#net' do
+  describe '#request' do
     it 'constructs the net request object from the given options' do
       uri = URI('http://example.com')
       body = { baz: 'qux' }
       stubbed_parser = double('Parser', encode: 'encoded_body')
-      options = double(Safettp::HTTPOptions,
+      options = Safettp::HTTPOptions.new(
         headers: { Accept: 'application/json' },
         body: { baz: 'qux' },
-        parser: stubbed_parser
+        parser: stubbed_parser,
+        authorization: {
+          type: :basic,
+          username: 'foo',
+          password: 'bar'
+        }
       )
       net = described_class.new(:post, uri, options)
 
@@ -18,6 +47,7 @@ RSpec.describe Safettp::Request::Net do
       expect(result).to be_an_instance_of(Net::HTTP::Post)
       expect(result.uri).to eq(uri)
       expect(result.get_fields('Accept')).to include('application/json')
+      expect(result.get_fields('Authorization')).to include('Basic Zm9vOmJhcg==')
       expect(result.body).to eq('encoded_body')
     end
   end

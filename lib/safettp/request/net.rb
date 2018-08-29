@@ -23,10 +23,15 @@ class Safettp::Request::Net
     klass.new(uri).tap do |request|
       set_headers(request)
       set_body(request)
+      set_authorization(request)
     end
   end
 
   private
+
+  def set_authorization(request)
+    options.authorization.set(request)
+  end
 
   def set_body(request)
     request.body = options.parser.encode(options.body)

@@ -25,4 +25,10 @@ class Safettp::HTTPOptions
   def body
     options_hash.fetch(:body, "")
   end
+
+  def authorization
+    authorization_options = options_hash.fetch(:authorization, { type: :none })
+    Object.const_get("Safettp::#{authorization_options[:type].capitalize}Authenticator")
+          .new(authorization_options)
+  end
 end
