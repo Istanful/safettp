@@ -21,11 +21,20 @@ class Safettp::Request::Net
   def request
     klass = Kernel.const_get("Net::HTTP::#{verb.capitalize}")
     klass.new(uri).tap do |request|
-      options.headers.each do |header, value|
-        request.add_field(header.to_s, value)
-      end
+      set_headers(request)
+      set_body(request)
+    end
+  end
 
-      request.body = options.parser.encode(options.body)
+  private
+
+  def set_body(request)
+    request.body = options.parser.encode(options.body)
+  end
+
+  def set_headers(request)
+    options.headers.each do |header, value|
+      request.add_field(header.to_s, value)
     end
   end
 end
