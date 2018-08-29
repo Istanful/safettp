@@ -21,17 +21,29 @@ Or install it yourself as:
 
 ## Synopsis
 ```ruby
-class BlogClient
-  extend Safettp::Client
+class MyHttpClient
+  include Safettp::Client
 
-  options do |options|
-    options.base_url = 'http://my-blog.com'
+  configure do |config|
+    config.base_url = 'https://httpbin.org'
+    config.default_options = { headers: { Accept: 'application/json' } }
   end
 
-  def create_post(payload, &block)
-    post('/posts', payload, &block)
+  def do_post(payload, &block)
+    post('/post', payload, &block)
   end
 end
+
+MyHttpClient.do_post({ body: 'my_body' }) do |result|
+  result.on_success do |response|
+    puts response.parsed_body
+  end
+
+  result.on_failure do |response|
+    puts 'Request failed :c'
+  end
+end
+```
 
 ## Development
 

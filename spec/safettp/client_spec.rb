@@ -1,9 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe Safettp::Client do
+  let(:client_class) do
+    Class.new do
+      include Safettp::Client
+
+      configure do |config|
+        config.base_url = 'https://example.com'
+      end
+    end
+  end
+
   describe '#perform' do
     it 'wraps the response in a guard' do
-      client = described_class.new('https://example.com')
+      client = client_class.new('https://example.com')
       response = double(Safettp::Response)
       stubbed_request = stub_safettp_request(response)
       guard = double(Safettp::Guard)
@@ -17,7 +27,7 @@ RSpec.describe Safettp::Client do
 
   describe '#perform_without_guard' do
     it 'performs an http request with the appropriate method' do
-      client = described_class.new('https://example.com')
+      client = client_class.new('https://example.com')
       stubbed_request = stub_safettp_request
 
       client.perform_without_guard(:post, '/post')
@@ -30,7 +40,7 @@ RSpec.describe Safettp::Client do
     it 'passes along the options' do
       options = { headers: { Accept: 'application/json' } }
       additional_options = { query: { foo: 'bar' } }
-      client = described_class.new('https://example.com', options)
+      client = client_class.new('https://example.com', options)
       stub_safettp_request
 
       client.perform_without_guard(:get, '/', additional_options)
