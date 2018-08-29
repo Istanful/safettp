@@ -13,9 +13,9 @@ class Safettp::Client
     guard.evaluate!
   end
 
-  def perform_without_guard(method, uri_suffix = '/')
+  def perform_without_guard(method, uri_suffix = '/', additional_options = {})
     url = "#{base_url}#{uri_suffix}"
-    Safettp::Request.new(url, options_hash)
+    Safettp::Request.new(url, options_hash.merge(additional_options))
                     .perform(method)
   end
 end

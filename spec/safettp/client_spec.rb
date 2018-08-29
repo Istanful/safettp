@@ -29,13 +29,14 @@ RSpec.describe Safettp::Client do
 
     it 'passes along the options' do
       options = { headers: { Accept: 'application/json' } }
+      additional_options = { query: { foo: 'bar' } }
       client = described_class.new('https://example.com', options)
       stub_safettp_request
 
-      client.perform_without_guard(:get)
+      client.perform_without_guard(:get, '/', additional_options)
 
       expect(Safettp::Request).to have_received(:new)
-        .with('https://example.com/', options)
+        .with('https://example.com/', options.merge(additional_options))
     end
   end
 
