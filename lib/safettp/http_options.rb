@@ -1,4 +1,9 @@
 class Safettp::HTTPOptions
+  AUTHENTICATORS = {
+    none: Safettp::NoneAuthenticator,
+    basic: Safettp::BasicAuthenticator
+  }.freeze
+
   DEFAULT_HEADERS = {
     Accept: 'application/json',
     'Content-Type': 'application/json'
@@ -28,7 +33,7 @@ class Safettp::HTTPOptions
 
   def authorization
     authorization_options = options_hash.fetch(:authorization, { type: :none })
-    Object.const_get("Safettp::#{authorization_options[:type].capitalize}Authenticator")
-          .new(authorization_options)
+    AUTHENTICATORS.fetch(authorization_options[:type], Safettp::NoneAuthenticator)
+                  .new(authorization_options)
   end
 end
