@@ -10,7 +10,7 @@ RSpec.describe Safettp::Request::Net do
         headers: { Accept: 'application/json' },
         body: { baz: 'qux' },
         parser: stubbed_parser,
-        authorization: {
+        auth: {
           type: :basic,
           username: 'foo',
           password: 'bar'

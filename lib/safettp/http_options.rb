@@ -1,5 +1,5 @@
 class Safettp::HTTPOptions
-  AUTHENTICATORS = {
+  AUTH_TYPES = {
     none: Safettp::NoneAuthenticator,
     basic: Safettp::BasicAuthenticator
   }.freeze
@@ -31,9 +31,9 @@ class Safettp::HTTPOptions
     options_hash.fetch(:body, "")
   end
 
-  def authorization
-    authorization_options = options_hash.fetch(:authorization, { type: :none })
-    AUTHENTICATORS.fetch(authorization_options[:type], Safettp::NoneAuthenticator)
-                  .new(authorization_options)
+  def auth
+    auth_options = options_hash.fetch(:auth, { type: :none })
+    AUTH_TYPES.fetch(auth_options[:type], Safettp::NoneAuthenticator)
+              .new(auth_options)
   end
 end

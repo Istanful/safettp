@@ -30,7 +30,7 @@ class Safettp::Request::Net
   private
 
   def set_authorization(request)
-    options.authorization.set(request)
+    options.auth.set(request)
   end
 
   def set_body(request)
