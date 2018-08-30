@@ -46,7 +46,7 @@ module Safettp::Client
     base.extend(ClassMethods)
 
     %i[get post put patch delete].each do |method|
-      define_method(method) do |uri_suffix, options, &block|
+      define_method(method) do |uri_suffix, options = {}, &block|
         perform(method, uri_suffix, options, &block)
       end
     end
