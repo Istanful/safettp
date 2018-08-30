@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "safettp"
   spec.version       = Safettp::VERSION
   spec.authors       = ["Emric"]
-  spec.email         = ["w.e.w@live.se"]
+  spec.email         = ["emric.mansson@gmail.com"]
 
   spec.summary       = %q{Simple HTTP library with guarded requests.}
   spec.license       = "MIT"
