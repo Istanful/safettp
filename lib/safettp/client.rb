@@ -21,7 +21,11 @@ module Safettp::Client
   end
 
   module ClassMethods
-    attr_accessor :config
+    attr_writer :config
+
+    def config
+      @config || Safettp::Client::Configuration.new
+    end
 
     def instance_from_default_options
       new(config.base_url, config.default_options)
@@ -37,8 +41,7 @@ module Safettp::Client
     end
 
     def configure
-      self.config ||= Safettp::Client::Configuration.new
-      yield(config)
+      yield(@config)
     end
   end
 
