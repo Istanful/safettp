@@ -1,29 +1,5 @@
 require 'spec_helper'
 
-class Safettp::BasicAuthenticator
-  attr_reader :options
-
-  def initialize(options)
-    @options = options
-  end
-
-  def set(request)
-    request.basic_auth(options[:username], options[:password])
-  end
-end
-
-class Safettp::NoneAuthenticator
-  attr_reader :options
-
-  def initialize(options)
-    @options = options
-  end
-
-  def set(request)
-    request
-  end
-end
-
 RSpec.describe Safettp::Request::Net do
   describe '#request' do
     it 'constructs the net request object from the given options' do
