@@ -21,40 +21,6 @@ Or install it yourself as:
 
 ## Usage
 
-### A simple example for the cool kids.
-```ruby
-class HTTPBinClient
-  include Safettp::Client
-
-  # Setup the default setting for any given request.
-  configure do |config|
-    # The base url every request url will be appended to.
-    config.base_url = 'https://httpbin.org'
-
-    # Additional options that specify the nature of the default request.
-    # Find all options available (here)[#options]
-    config.default_options = { headers: { Accept: 'application/json' } }
-  end
-
-  # Define a custom client method. This method will be available both on a new
-  # client instance and on the class itself.
-  def test_post(payload, &block)
-    post('/post', body: payload, &block)
-  end
-end
-
-# Perform a request. The result object must be given a block for both the
-# success state and failure state.
-MyHttpClient.do_post(message: 'Hello world!') do |result|
-  result.on_success do |response|
-    puts response.parsed_body
-  end
-
-  result.on_failure do |response|
-    puts 'Request failed :c'
-  end
-end
-```
 ### The client
 To make use of the available functionality in Safettp, you will have to include the `Safettp::Client` module on a class of yours.
 ```ruby
@@ -78,9 +44,8 @@ end
 From this point on your client is fit for fight!
 
 ### Performing a request
- A client will be able to perform the 4 common HTTP methods like so:
+ A client will be able to perform `get`, `post`, `put`, `patch` and `delete` like so:
 ```ruby
-# You can replace `post` with your prefered method
 HTTPBinClient.post('https://httpbin.org/post', options) do |result|
   result.on_success do |response|
     # Your code goes here upon success.
@@ -92,9 +57,9 @@ HTTPBinClient.post('https://httpbin.org/post', options) do |result|
 end
 ```
 
-As you can see two separate blocks are yielded whether the request succeeded or failed. In order to use the method you will have to provide both. This will guard you from unexpected errors, neat right?
+As you can see two separate blocks are yielded whether the request succeeded or failed. In order to use the method you will have to provide both. This will guard you from unexpected errors. Neat right?
 
-The options hash provided as the second parameter in the example above can be used to append additional information to the request. _You can read about the available options [here](###\ Request\ options)_
+The options hash provided as the second parameter in the example above can be used to append additional information to the request. _You can read about the available options [here](#request-options)_
 
 ### The response object
 To retrieve the data obtained from the request you call `#parsed_body`. It will parse the data from JSON.
@@ -137,15 +102,13 @@ HTTPBinClient.get('/get', auth: {
 ```
 
 ## Development
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bundle install` to install dependencies. Then, run `rspec` to run the tests.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/safettp.
+Bug reports and pull requests are welcome on GitHub at https://github.com/istanful/safettp.
 
 ## License
-
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
