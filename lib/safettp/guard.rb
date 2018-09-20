@@ -16,7 +16,7 @@ class Safettp::Guard
 
   def cover(state, &block)
     @covered << state
-		yield(response) if response_is?(state)
+    yield(response) if response_is?(state)
   end
 
   def safe?
@@ -32,9 +32,9 @@ class Safettp::Guard
     cover(:failure, &block)
   end
 
-	private
+  private
 
-	def response_is?(state)
-		response.public_send("#{state}?")
-	end
+  def response_is?(state)
+    response.public_send("#{state}?")
+  end
 end
